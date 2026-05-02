@@ -44,9 +44,15 @@ h1{
     margin-top: 10px;
     width: 93%;
 }
+.task1{
+    display: flex;
+    gap: 20px;
+}
 .todoCheckbox{
     transform: scale(1.5);
     border-radius: none;
+    accent-color: #4E4E4E;
+    /* appearance: none; */
 }
 .completed{
     text-decoration: line-through;

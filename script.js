@@ -18,9 +18,11 @@ addTodoBtn.addEventListener('click', (e) => {
     console.log('im clicked')
     // e.preventDefault()
     const inputVal = document.getElementById('inputNewTask').value.trim()
+    const checkboxVal = document.querySelector('.todoCheckbox');
     const newTasks = {
         id: Date.now(),
-        titleIn: inputVal
+        titleIn: inputVal,
+        completed : false
     }
     const inputField = document.getElementById('inputNewTask')
     if (newTasks.titleIn === "") {
@@ -33,32 +35,49 @@ addTodoBtn.addEventListener('click', (e) => {
     
     
     taskList.push(newTasks);
-    saveToStorage();
+    
 
     const task = createTodo(newTasks)
 
     
     display.append(task)
-    
+    saveToStorage();
     inputField.value = "";
 });
 
 function createTodo(titleObject) {
     const taskContainer = document.createElement('div');
     taskContainer.className = 'taskContainer';
+    const taskSection1 = document.createElement('div');
+    taskSection1.className = 'task1'
+    const h4 = document.createElement('h4');
+    h4.className = 'taskTitle';
+    h4.textContent = titleObject.titleIn;
+
+
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.className = 'todoCheckbox';
+   
     checkbox.addEventListener('click', () => {
         h4.classList.toggle('completed')
         h4.style.color = checkbox.checked ? '#967474' : '#4E4E4E';
+        const taskIndex = taskList.findIndex(t => t.id === titleObject.id);
+        if (taskIndex !== -1) {
+            taskList[taskIndex].completed = checkbox.checked
+        }
+        saveToStorage();
         getUNcheckedCount()
+        
     })
+     if (titleObject.completed) {
+        h4.classList.toggle('completed')
+        h4.style.color = '#967474';
+    }
+    checkbox.checked = titleObject.completed;
 
-    const h4 = document.createElement('h4');
-    h4.className = 'taskTitle';
-    h4.textContent = titleObject.titleIn;
+    taskSection1.append(checkbox,h4)
 
     
     
@@ -76,7 +95,7 @@ function createTodo(titleObject) {
 
     span.append(i);
 
-    taskContainer.append(checkbox,h4,span);
+    taskContainer.append(taskSection1,span);
 
     return taskContainer
 
