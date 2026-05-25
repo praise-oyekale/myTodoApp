@@ -3,9 +3,9 @@ const addTodoBtn = document.getElementById('addTodoBtn');
 const title = document.getElementById('taskTitle'); 
 
 
-let taskList = JSON.parse(localStorage.getItem('todoTaskStorage')) || 
-[];
-
+// let taskList = JSON.parse(localStorage.getItem('todoTaskStorage')) || 
+// [];
+ let taskList = []
 window.addEventListener('DOMContentLoaded', () => {
     renderTasks();
     getUNcheckedCount()
@@ -34,13 +34,14 @@ addTodoBtn.addEventListener('click', (e) => {
     }
     
     
-    taskList.push(newTasks);
+    // taskList.push(newTasks);
     
 
     const task = createTodo(newTasks)
 
     
-    display.append(task)
+    // display.append(taskList)
+    renderTasks()
     saveToStorage();
     inputField.value = "";
 });
@@ -123,6 +124,16 @@ function getUNcheckedCount() {
     console.log(unChecked.length)
     return unChecked.length
 }
+
+fetch('https://dummyjson.com/todos/user/5').then(res => res.json()).then(data => {
+    taskList = data.todos.map(item => ({
+        id: item.id,
+        titleIn:item.todo,
+        completed: item.completed
+    }));
+    renderTasks();
+    getUNcheckedCount()
+})
 
 
 
