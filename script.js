@@ -125,7 +125,7 @@ function getUNcheckedCount() {
     return unChecked.length
 }
 
-fetch('https://dummyjson.com/todos/user/5').then(res => res.json()).then(data => {
+fetch('https://dummyjson.com/todos/').then(res => res.json()).then(data => {
     taskList = data.todos.map(item => ({
         id: item.id,
         titleIn:item.todo,
