@@ -14,37 +14,37 @@ window.addEventListener('DOMContentLoaded', () => {
 const display = document.getElementById('display')
 
 
-addTodoBtn.addEventListener('click', (e) => {
-    console.log('im clicked')
-    // e.preventDefault()
-    const inputVal = document.getElementById('inputNewTask').value.trim()
-    const checkboxVal = document.querySelector('.todoCheckbox');
-    const newTasks = {
-        id: Date.now(),
-        titleIn: inputVal,
-        completed : false
-    }
-    const inputField = document.getElementById('inputNewTask')
-    if (newTasks.titleIn === "") {
-        console.log('enter title')
-        inputField.style.border = "1px solid red";
-        inputField.placeholder = "Enter your Title"
+// addTodoBtn.addEventListener('click', (e) => {
+//     console.log('im clicked')
+//     // e.preventDefault()
+//     const inputVal = document.getElementById('inputNewTask').value.trim()
+//     const checkboxVal = document.querySelector('.todoCheckbox');
+//     const newTasks = {
+//         id: Date.now(),
+//         titleIn: inputVal,
+//         completed : false
+//     }
+//     const inputField = document.getElementById('inputNewTask')
+//     if (newTasks.titleIn === "") {
+//         console.log('enter title')
+//         inputField.style.border = "1px solid red";
+//         inputField.placeholder = "Enter your Title"
 
-        return
-    }
+//         return
+//     }
     
     
-    // taskList.push(newTasks);
+//     // taskList.push(newTasks);
     
 
-    const task = createTodo(newTasks)
+//     const task = createTodo(newTasks)
 
     
-    // display.append(taskList)
-    renderTasks()
-    saveToStorage();
-    inputField.value = "";
-});
+//     // display.append(taskList)
+//     renderTasks()
+//     saveToStorage();
+//     inputField.value = "";
+// });
 
 function createTodo(titleObject) {
     const taskContainer = document.createElement('div');
@@ -53,7 +53,7 @@ function createTodo(titleObject) {
     taskSection1.className = 'task1'
     const h4 = document.createElement('h4');
     h4.className = 'taskTitle';
-    h4.textContent = titleObject.titleIn;
+    h4.textContent = titleObject.todo;
 
 
 
@@ -125,15 +125,47 @@ function getUNcheckedCount() {
     return unChecked.length
 }
 
-fetch('https://dummyjson.com/todos/').then(res => res.json()).then(data => {
+fetch('https://dummyjson.com/todos?limit=5&skip=10').then(res => res.json()).then(data => {
     taskList = data.todos.map(item => ({
         id: item.id,
-        titleIn:item.todo,
+        todo:item.todo,
         completed: item.completed
     }));
     renderTasks();
     getUNcheckedCount()
-})
+}).catch(error => {
+    display.innerText = " Connection Error!!"
+});
+
+const input = document.getElementById("inputNewTask");
+addTodoBtn.addEventListener('click', addTodo)
+async function addTodo() {
+    const task = input.value
+
+    if (!task) return
+    try {
+        const response = await fetch('https://dummyjson.com/todos/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                todo: task,
+                completed: false,
+                userId:  1
+            })
+        })
+
+        const data = await response.json();
+        console.log(data)
+        taskList.push(data)
+        renderTasks()
+        input.value = ""
+        
+    } catch (error) {
+        console.log
+    }
+}
 
 
 
